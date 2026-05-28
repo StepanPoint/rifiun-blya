@@ -1,443 +1,465 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RIFIUN_BLYA_DATABASE_V3</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIFIUN_BLYA_DATABASE_V3</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        :root {
-            --bg-color: #050505;
-            --terminal-bg: #0a0a0a;
-            --neon-blue: #4deeea;
-            --neon-pink: #ff0055;
-            --text-dim: #6b7c85;
-        }
+    body {
+      font-family: 'Courier New', monospace;
+      background: #000 url('https://images.unsplash.com/photo-1518066000714-58c45f1a2c0a?q=80&w=2070&auto=format&fit=crop') center/cover fixed;
+      color: #0f0;
+      min-height: 100vh;
+      padding: 20px;
+      text-shadow: 0 0 5px #0f0, 0 0 10px rgba(0,255,0,0.5);
+      overflow-x: hidden;
+    }
 
-        body {
-            font-family: 'Share Tech Mono', monospace;
-            background-color: var(--bg-color);
-            color: #aabbc3;
-            overflow-x: hidden;
-            height: 100vh;
-            margin: 0;
-        }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: 
+        linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)),
+        repeating-linear-gradient(0deg, rgba(0,50,0,0.1) 0px, rgba(0,50,0,0.1) 1px, transparent 1px, transparent 2px);
+      pointer-events: none;
+      z-index: -1;
+    }
 
-        /* Шум и CRT эффекты */
-        .noise-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 50; opacity: 0.07;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-        .crt::before {
-            content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 40; background-size: 100% 2px, 3px 100%; pointer-events: none;
-        }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      border: 1px solid #0f0;
+      box-shadow: 0 0 20px #0f0, inset 0 0 30px rgba(0,255,0,0.1);
+      background: rgba(0, 10, 0, 0.85);
+      padding: 20px;
+      position: relative;
+    }
 
-        .snow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+    .header {
+      text-align: center;
+      padding: 15px;
+      border-bottom: 1px dashed #0f0;
+      margin-bottom: 20px;
+    }
 
-        .terminal-window {
-            background: rgba(12, 12, 14, 0.95);
-            border: 1px solid #333;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8);
-        }
-        .terminal-header {
-            background: #1a1a1a; border-bottom: 1px solid #333; padding: 8px 12px;
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 0.8rem; color: #666; text-transform: uppercase; letter-spacing: 1px;
-        }
+    .header h1 {
+      font-size: 1.8rem;
+      letter-spacing: 3px;
+      animation: flicker 3s infinite;
+    }
 
-        textarea {
-            background: transparent; color: #d1d5db;
-            font-family: 'VT323', monospace; font-size: 1.5rem; line-height: 1.4;
-            caret-color: var(--neon-pink);
-        }
-        textarea::selection { background: var(--neon-pink); color: #000; }
+    .header .subtitle {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-top: 5px;
+    }
 
-        .doomer-btn {
-            background: #111; border: 1px solid #444; color: #888;
-            transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 1px;
-        }
-        .doomer-btn:hover {
-            border-color: var(--neon-blue); color: var(--neon-blue);
-            box-shadow: 0 0 10px rgba(77, 238, 234, 0.2); cursor: pointer;
-        }
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+      20%, 24%, 55% { opacity: 0.6; }
+    }
 
-        .rhyme-item {
-            border-left: 2px solid #333; transition: all 0.2s;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .rhyme-item:hover {
-            border-left-color: var(--neon-pink); background: rgba(255, 0, 85, 0.05);
-            padding-left: 10px; color: #fff;
-        }
-        
-        .tag-source { font-size: 0.6rem; color: #444; text-transform: uppercase; }
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      padding: 8px 12px;
+      background: rgba(0, 30, 0, 0.6);
+      border: 1px solid #0a0;
+      margin-bottom: 15px;
+    }
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #050505; }
-        ::-webkit-scrollbar-thumb { background: #333; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
-    </style>
+    .status-bar .hint {
+      color: #0f0;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    #results-db {
+      min-height: 180px;
+      padding: 15px;
+      border: 1px solid #0a0;
+      background: rgba(0, 20, 0, 0.5);
+      line-height: 1.8;
+      font-size: 1.1rem;
+      cursor: text;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .clickable-word {
+      cursor: pointer;
+      transition: all 0.15s ease;
+      padding: 2px 3px;
+      border-radius: 2px;
+      display: inline;
+    }
+
+    .clickable-word:hover {
+      background: rgba(0, 255, 0, 0.3);
+      box-shadow: 0 0 8px #0f0;
+      text-shadow: 0 0 8px #0f0;
+    }
+
+    .word-highlight {
+      background: #0f0 !important;
+      color: #000 !important;
+      font-weight: bold;
+      box-shadow: 0 0 12px #0f0, inset 0 0 5px rgba(255,255,255,0.3);
+      text-shadow: none !important;
+    }
+
+    #rhyme-results {
+      margin-top: 20px;
+      padding: 12px;
+      border-left: 3px solid #0f0;
+      background: rgba(0, 30, 0, 0.7);
+      min-height: 60px;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    #rhyme-results.active {
+      display: block;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .rhyme-title {
+      color: #0f0;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .rhyme-list {
+      color: #0c0;
+    }
+
+    .rhyme-list span {
+      display: inline-block;
+      margin: 3px 5px 3px 0;
+      padding: 3px 8px;
+      background: rgba(0, 100, 0, 0.4);
+      border: 1px solid #0a0;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .rhyme-list span:hover {
+      background: rgba(0, 255, 0, 0.3);
+      border-color: #0f0;
+    }
+
+    .quote {
+      margin-top: 25px;
+      padding-top: 15px;
+      border-top: 1px dashed #0a0;
+      font-style: italic;
+      opacity: 0.85;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .error {
+      color: #f66;
+      text-shadow: 0 0 5px #f66;
+    }
+
+    .loading {
+      color: #0f0;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0.4; }
+    }
+
+    /* Scanline effect */
+    .container::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(
+        to bottom,
+        transparent 50%,
+        rgba(0, 50, 0, 0.08) 51%,
+        transparent 52%
+      );
+      background-size: 100% 4px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .content-wrapper {
+      position: relative;
+      z-index: 2;
+    }
+  </style>
 </head>
-<body class="crt">
-    <div class="noise-overlay"></div>
+<body>
+  <div class="container">
+    <div class="content-wrapper">
+      <div class="header">
+        <h1>RIFIUN BLYA</h1>
+        <div class="subtitle">DATABASE_V3 // LOADED // NO_CENSORSHIP_EXCEPT_HASH</div>
+      </div>
+
+      <div class="status-bar">
+        <span>my_soul.txt <span style="color:#0a0">UNSAVED</span></span>
+        <span>WORDS: <span id="word-count">0</span></span>
+        <span class="hint">CTRL + ENTER = SCAN СКАНИРОВАТЬ БАЗУ</span>
+      </div>
+
+      <div id="results-db">Ожидание ввода...(введи слово и нажми поиск)</div>
+
+      <div id="rhyme-results">
+        <div class="rhyme-title">🔍 РИФМЫ:</div>
+        <div class="rhyme-list" id="rhyme-list"></div>
+      </div>
+
+      <div class="quote">
+        "В этом городе даже снег пахнет пеплом и безысходностью."
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // === ГЛАВНЫЙ МОДУЛЬ: ВЫДЕЛЕНИЕ СЛОВ + ПОИСК РИФМ ===
     
-    <!-- Фон: Панелька -->
-    <div class="fixed inset-0 z-0">
-        <img src="https://images.unsplash.com/photo-1518066000714-58c45f1a2c0a?q=80&w=2070&auto=format&fit=crop" 
-             class="w-full h-full object-cover opacity-30 grayscale contrast-125 brightness-50" alt="panelka">
-        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
-    </div>
+    const resultsDb = document.getElementById('results-db');
+    const rhymeResults = document.getElementById('rhyme-results');
+    const rhymeList = document.getElementById('rhyme-list');
+    const wordCountEl = document.getElementById('word-count');
 
-    <canvas id="snow" class="snow"></canvas>
+    // База рифм по окончаниям (упрощённая для демонстрации)
+    // В продакшене можно подключить API или загрузить словарь
+    const rhymeDatabase = {
+      // Гласные окончания
+      'а': ['а', 'я', 'ка', 'та', 'на', 'ма', 'ла', 'да', 'ра', 'жа'],
+      'я': ['я', 'мя', 'ня', 'бя', 'вя', 'дя', 'зя', 'ля', 'мя', 'ря'],
+      'о': ['о', 'го', 'ло', 'но', 'то', 'со', 'ро', 'ко', 'до', 'по'],
+      'е': ['е', 'те', 'не', 'ле', 'ре', 'се', 'ве', 'де', 'ке', 'ме'],
+      'и': ['и', 'ти', 'ни', 'ли', 'ри', 'си', 'ви', 'ди', 'ки', 'ми'],
+      'ы': ['ы', 'ты', 'ны', 'лы', 'ры', 'сы', 'вы', 'ды', 'кы', 'мы'],
+      // Согласные + мягкий знак
+      'нь': ['нь', 'день', 'тень', 'сень', 'лень', 'пень', 'зень', 'вень'],
+      'ть': ['ть', 'сеть', 'лет', 'цвет', 'свет', 'ответ', 'привет', 'рассвет'],
+      'ло': ['ло', 'окно', 'дно', 'оно', 'полно', 'давно', 'смешно', 'волно'],
+      'ой': ['ой', 'герой', 'покой', 'бой', 'строй', 'зной', 'душой', 'судьбой'],
+      'ай': ['ай', 'край', 'рай', 'май', 'знай', 'давай', 'играй', 'вставай'],
+      'ок': ['ок', 'срок', 'восток', 'поток', 'сучок', 'теремок', 'песок'],
+      'ас': ['ас', 'класс', 'глаз', 'раз', 'сейчас', 'приказ', 'рассказ'],
+      'ет': ['ет', 'свет', 'ответ', 'привет', 'рассвет', 'поэт', 'балет'],
+      'ит': ['ит', 'летит', 'горит', 'болит', 'звучит', 'спешит', 'летит'],
+      'ать': ['ать', 'знать', 'ждать', 'дать', 'стать', 'брать', 'гнать', 'рвать'],
+      'еть': ['еть', 'смотреть', 'лететь', 'гореть', 'уметь', 'терпеть', 'идеть'],
+      'ить': ['ить', 'любить', 'жить', 'быть', 'просить', 'носить', 'ходить'],
+    };
 
-    <div class="relative z-20 min-h-screen flex flex-col items-center justify-center p-4">
+    // Стоп-слова (не кликабельные)
+    const stopWords = new Set([
+      'и', 'в', 'на', 'не', 'с', 'к', 'по', 'о', 'а', 'но', 'да', 'же', 'ли',
+      'этот', 'эта', 'это', 'эти', 'тот', 'та', 'то', 'те',
+      'я', 'ты', 'он', 'она', 'оно', 'мы', 'вы', 'они',
+      'мой', 'твой', 'свой', 'наш', 'ваш', 'его', 'её', 'их'
+    ]);
+
+    // === ФУНКЦИЯ: Разбивка текста на кликабельные слова ===
+    function tokenizeText(text) {
+      // Разбиваем на токены: слова, пробелы, знаки препинания
+      return text.split(/(\s+|[^\wа-яА-ЯёЁ]+)/).filter(t => t);
+    }
+
+    function renderClickableWords(element) {
+      const text = element.textContent;
+      const tokens = tokenizeText(text);
+      
+      let wordCount = 0;
+      
+      element.innerHTML = tokens.map(token => {
+        // Проверяем, является ли токен словом (кириллица/латиница + цифры)
+        if (/^[\wа-яА-ЯёЁ]+$/.test(token) && token.length >= 2) {
+          wordCount++;
+          const lower = token.toLowerCase();
+          // Пропускаем стоп-слова для кликов (опционально)
+          const clickable = !stopWords.has(lower) ? 'clickable-word' : '';
+          return `<span class="${clickable}" data-word="${token.replace(/"/g, '&quot;')}" data-original="${token}">${token}</span>`;
+        }
+        return token; // пробелы и знаки препинания без изменений
+      }).join('');
+
+      // Обновляем счётчик слов
+      wordCountEl.textContent = wordCount;
+
+      // Навешиваем обработчики кликов
+      element.querySelectorAll('.clickable-word').forEach(span => {
+        span.addEventListener('click', (e) => {
+          e.stopPropagation();
+          handleWordClick(e.currentTarget);
+        });
+      });
+    }
+
+    // === ФУНКЦИЯ: Обработка клика по слову ===
+    function handleWordClick(element) {
+      // Снимаем предыдущее выделение
+      document.querySelectorAll('.word-highlight').forEach(el => {
+        el.classList.remove('word-highlight');
+      });
+
+      // Выделяем текущее слово
+      element.classList.add('word-highlight');
+      
+      const word = element.dataset.original;
+      findAndDisplayRhymes(word);
+    }
+
+    // === ФУНКЦИЯ: Поиск рифм ===
+    function findRhymes(word) {
+      const lower = word.toLowerCase();
+      const results = new Set();
+
+      // 1. Прямое совпадение в базе по окончанию
+      for (const [ending, rhymes] of Object.entries(rhymeDatabase)) {
+        if (lower.endsWith(ending)) {
+          rhymes.forEach(r => {
+            if (r.toLowerCase() !== lower) {
+              results.add(r);
+            }
+          });
+          break; // берём первое подходящее окончание
+        }
+      }
+
+      // 2. Генерация "псевдо-рифм" по последним 2-3 буквам (если база пуста)
+      if (results.size === 0 && lower.length >= 3) {
+        const suffix = lower.slice(-2);
+        const prefixes = ['пр', 'ст', 'кр', 'бр', 'тр', 'др', 'гр', 'зр', 'мр'];
+        prefixes.forEach(p => {
+          const candidate = p + suffix;
+          if (candidate !== lower && candidate.length >= 3) {
+            results.add(candidate);
+          }
+        });
+      }
+
+      // 3. Если всё ещё пусто — возвращаем заглушку
+      if (results.size === 0) {
+        return [`🤔 Для "${word}" рифм не найдено... попробуйте другое слово`];
+      }
+
+      return Array.from(results).slice(0, 12); // лимит вывода
+    }
+
+    // === ФУНКЦИЯ: Отображение результатов ===
+    function findAndDisplayRhymes(word) {
+      rhymeResults.classList.add('active');
+      rhymeList.innerHTML = '<span class="loading">⚡ СКАНИРОВАНИЕ БАЗЫ РИФМ...</span>';
+
+      // Имитация задержки "поиска" для атмосферы
+      setTimeout(() => {
+        const rhymes = findRhymes(word);
         
-        <header class="mb-6 text-center">
-            <h1 class="text-6xl md:text-8xl font-bold tracking-tighter text-gray-300 mb-2" style="font-family: 'VT323', monospace;">
-                RIFIUN <span class="text-[#ff0055]">BLYA</span>
-            </h1>
-            <div class="flex items-center justify-center gap-2 text-xs text-gray-500 uppercase tracking-widest">
-                <span class="w-2 h-2 rounded-full bg-green-900 animate-pulse"></span>
-                DATABASE_V3 // LOADED // NO_CENSORSHIP_EXCEPT_HASH
-            </div>
-        </header>
+        if (rhymes[0].includes('🤔')) {
+          rhymeList.innerHTML = `<span class="error">${rhymes[0]}</span>`;
+        } else {
+          rhymeList.innerHTML = rhymes.map(r => 
+            `<span data-rhyme="${r}">${r}</span>`
+          ).join('');
+          
+          // Клик по рифме — копирует в буфер или выделяет
+          rhymeList.querySelectorAll('span[data-rhyme]').forEach(span => {
+            span.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const rhyme = e.currentTarget.dataset.rhyme;
+              navigator.clipboard?.writeText(rhyme);
+              // Визуальный фидбек
+              const original = e.currentTarget.textContent;
+              e.currentTarget.textContent = '✓';
+              setTimeout(() => {
+                e.currentTarget.textContent = original;
+              }, 800);
+            });
+          });
+        }
+      }, 300);
+    }
 
-        <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
-            <!-- Редактор -->
-            <div class="lg:col-span-8 terminal-window rounded-sm flex flex-col h-[60vh] lg:h-[70vh]">
-                <div class="terminal-header">
-                    <span><i class="fas fa-file-code mr-2"></i>my_soul.txt</span>
-                    <span class="text-[#ff0055]">UNSAVED</span>
-                </div>
-                <textarea id="editor" class="flex-1 p-6 outline-none resize-none w-full" 
-                    placeholder="Пиши сюда...&#10;Серость панельных дворов...&#10;Холод бетонных стен..."></textarea>
-                <div class="p-2 border-t border-[#333] flex justify-between text-xs text-gray-600 bg-[#0a0a0a]">
-                    <span id="word-count">WORDS: 0</span>
-                    <span>CTRL + ENTER = SCAN</span>
-                </div>
-            </div>
-
-            <!-- Панель рифм -->
-            <div class="lg:col-span-4 flex flex-col gap-4">
-                
-                <div class="terminal-window rounded-sm p-4">
-                    <button onclick="getRhymes()" class="doomer-btn w-full py-3 px-4 flex items-center justify-center gap-2 mb-2">
-                        <i class="fas fa-search"></i> СКАНИРОВАТЬ БАЗУ
-                    </button>
-                    <div id="status-line" class="h-4 text-xs text-center text-gray-500 font-mono"></div>
-                </div>
-
-                <div class="terminal-window rounded-sm flex-1 p-0 overflow-hidden flex flex-col">
-                    <div class="terminal-header bg-[#111]">
-                        <span>RESULTS_DB</span>
-                        <i class="fas fa-database"></i>
-                    </div>
-                    <div id="rhymes-container" class="p-2 overflow-y-auto flex-1 space-y-1">
-                        <div class="text-center text-gray-600 mt-10 text-sm italic">
-                            Ожидание ввода...<br>
-                            <span class="text-[10px] opacity-50">(введи слово и нажми поиск)</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-2 text-center">
-                    <p class="text-xs text-gray-600 font-mono">"В этом городе даже снег пахнет пеплом и безысходностью."</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // --- ЗВУКОВОЙ ДВИЖОК ---
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // === ФУНКЦИЯ: Поддержка CTRL+ENTER для сканирования выделенного текста ===
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === 'Enter') {
+        e.preventDefault();
         
-        function playSound(type) {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            
-            if (type === 'click') {
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.05);
-                gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.05);
-            } else if (type === 'hover') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
-                gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.05);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.05);
-            } else if (type === 'error') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-                osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.3);
-                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-            } else if (type === 'success') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
-                gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-            }
+        // Проверяем, есть ли выделенный текст через Selection API
+        const selection = window.getSelection().toString().trim();
+        
+        if (selection && selection.length >= 2) {
+          // Если выделение есть — ищем рифму для него
+          findAndDisplayRhymes(selection);
+        } else {
+          // Иначе — ищем последнее выделенное слово по классу
+          const highlighted = document.querySelector('.word-highlight');
+          if (highlighted) {
+            const word = highlighted.dataset.original;
+            findAndDisplayRhymes(word);
+          } else {
+            // Подсказка
+            rhymeResults.classList.add('active');
+            rhymeList.innerHTML = '<span class="error">⚠ Выделите слово кликом или текстом для поиска рифмы</span>';
+          }
         }
+      }
+    });
 
-        // --- ОГРОМНАЯ БАЗА СЛОВ (DOOMER EDITION) ---
-        // Слова с решеткой - это цензура мата/грубости для безопасности контента
-        const rhymeDB = {
-            // --- ПРИРОДА / АТМОСФЕРА ---
-            "снег": ["бег", "век", "плен", "тлен", "день", "тень", "огонь", "конь", "брег", "ночь", "срок", "поток", "морок", "упрек"],
-            "дождь": ["дрожь", "молодёжь", "стреж", "еж", "нож", "плащ", "врач", "кач", "матч"],
-            "ветер": ["ответер", "петер", "сеттер", "метро", "депо", "небо", "хлеба"],
-            "холод": ["голод", "поворот", "лёд", "народ", "вход", "выход", "метод", "счёт", "полёт", "год", "рот", "пот"],
-            "туман": ["обман", "капкан", "стакан", "экран", "улан", "план", "шрам", "храм", "пан"],
-            "ночь": ["дочь", "прочь", "мощь", "ложь", "точь", "помощь", "брошь", "рожь", "вошь", "площадь"],
-            "луна": ["война", "стена", "цена", "вина", "страна", "тишина", "весна", "сосна", "старина", "седина"],
-            "звезда": ["вода", "года", "беда", "среда", "езда", "борода", "города", "навсегда", "никогда"],
-            
-            // --- ГОРОД / БЫТ ---
-            "город": ["холод", "голод", "поворот", "лёд", "народ", "вход", "выход", "метод", "счёт", "полёт"],
-            "дом": ["дым", "ком", "лом", "сом", "том", "холм", "льдом", "рядом", "взглядом", "ладом"],
-            "подъезд": ["съезд", "крест", "место", "текст", "арест", "лесть", "весть", "честь", "шерсть", "месть"],
-            "панелька": ["трещелка", "колыбелька", "стрелялка", "качелька", "постелька", "свистелка", "каруселька"],
-            "квартира": ["мира", "пира", "сира", "тира", "эфира", "кумира", "вампира", "инжира", "кефира"],
-            "окно": ["дно", "кино", "вино", "полотно", "веретено", "звено", "племя", "время"],
-            "балкон": ["сон", "трон", "клон", "закон", "огонь", "разгон", "перрон", "патрон", "бетон"],
-            "лифт": ["гриф", "риф", "шиф", "кефир", "мотив", "рефлексив", "позитив", "негатив"],
-            "мусор": ["кусор", "тусор", "плюсор", "минусор", "хаос", "бардак", "порядок", "достаток"],
-            
-            // --- ЧУВСТВА / СОСТОЯНИЕ ---
-            "боль": ["соль", "ноль", "контроль", "пароль", "простоль", "воль", "доля", "поля", "воля"],
-            "тоска": ["рука", "река", "мука", "века", "пока", "строка", "знака", "звука", "наука", "разлука", "штука"],
-            "любовь": ["кровь", "вновь", "бровь", "морковь", "основа", "обнов", "слово", "готово", "здорово"],
-            "страх": ["прах", "враг", "шаг", "мрак", "znak", "флаг", "овраг", "овраг", "овраг"],
-            "пустота": ["черта", "мечта", "сота", "работа", "забота", "позолота", "болота", "охота"],
-            "одиночество": ["ничество", "величество", "превосходительство", "могущество", "оружие", "хуже", "уже"],
-            "депрессия": ["прессия", "сессия", "цессия", "процессия", "амбиция", "позиция", "станция"],
-            "апатия": ["ребята", "плата", "утрата", "зарплата", "комната", "охота", "работа"],
-            
-            // --- ЛЮДИ / ТИПАЖИ ---
-            "друг": ["круг", "пруг", "вруг", "испуг", "засуг", "юг", "слуг", "плуг"],
-            "враг": ["праг", "шаг", "мрак", "овраг", "флаг", "овраг"],
-            "пацан": ["план", "стакан", "экран", "обман", "капкан", "улан", "шрам", "храм", "пан", "бан"],
-            "девка": ["клевка", "метка", "ветка", "детка", "сотка", "лотка", "шутка", "жутка"],
-            "мать": ["опять", "пять", "кровать", "знать", "вязать", "гулять", "дышать", "молчать"],
-            "отец": ["конец", "венец", "молодец", "боец", "творец", "продавец", "образец"],
-            "сын": ["блин", "клин", "сплин", "витамин", "апельсин", "мандарин", "серпантин"],
-            
-            // --- ДЕЙСТВИЯ ---
-            "курить": ["мир", "пир", "сир", "тир", "эфир", "кумир", "вампиры", "инжир", "кефир"],
-            "пить": ["быть", "жить", "шить", "крыть", "мыть", "плыть", "слыть", "грустить", "торчать", "молчать"],
-            "идти": ["пути", "цветы", "мечты", "черты", "косты", "посты", "хвосты", "листы"],
-            "смотреть": ["терпеть", "видеть", "сидеть", "болеть", "жалеть", "иметь", "звенеть", "греметь"],
-            "ждать": ["пять", "кровать", "знать", "вязать", "гулять", "дышать", "молчать", "опять"],
-            "уйти": ["пути", "цветы", "мечты", "черты", "косты", "посты", "хвосты", "листы"],
-            
-            // --- ПРЕДМЕТЫ ---
-            "сигарета": ["лета", "цвета", "монета", "планета", "ракета", "берета", "кассета", "газета"],
-            "водка": ["лодка", "коробка", "пробка", "тропка", "ошибка", "улыбка", "рыбка", "ошибка"],
-            "пиво": ["живо", "диво", "сливо", "криво", "трусливо", "красиво", "счастливо"],
-            "телефон": ["сон", "трон", "клон", "закон", "огонь", "разгон", "перрон", "патрон", "бетон"],
-            "компьютер": ["мутер", "шутер", "кластер", "мастер", "пастер", "гангстер", "монстр"],
-            
-            // --- ЦЕНЗУРА / ГРУБОСТЬ (ЗАМЕНА НА РЕШЕТКУ) ---
-            "блядь": ["власть", "часть", "пасть", "напасть", "пропасть", "сласть", "страсть", "масть"],
-            "сука": ["рука", "мука", "звука", "наука", "разлука", "штука", "брака", "знака"],
-            "пидор": ["видор", "гидор", "лидор", "индор", "аутдор", "спидор"],
-            "мудак": ["призрак", "мрак", "овраг", "шаг", "враг", "флаг"],
-            "еб***": ["небо", "хлеба", "треба", "где бы", "где-то", "лето", "светло"],
-            "хуй": ["бой", "злой", "покой", "герой", "прибой", "отбой", "разбой", "устой"],
-            "пизд***": ["жизнь", "близь", "грязь", "связь", "казнь", "лазнь", "мазь", "пазл"],
-            "нахуй": ["махай", "играй", "страдай", "уезжай", "не дыши", "не пиши", "не кричи"],
-            "ебало": ["мало", "пало", "стало", "устало", "пропало", "начало", "кончалось"],
-            "залупа": ["группа", "триппер", "сиплый", "хриплый", "липкий", "скользкий"],
-            
-            // --- АБСТРАКТНОЕ / ФИЛОСОФСКОЕ ---
-            "смысл": ["высь", "жизнь", "близь", "грязь", "связь", "казнь", "лазнь", "мазь", "пазл"],
-            "душа": ["гроза", "слеза", "коза", "фраза", "база", "назад", "алмаз", "экран", "показ"],
-            "сердце": ["перце", "мерце", "терце", "герце", "ферце"],
-            "разум": ["глазам", "образам", "фразам", "связям", "князьям", "друзьям"],
-            "судьба": ["борьба", "гриб", "сруб", "клуб", "зуб", "дуб", "гроб", "труб"]
-        };
+    // === ИНИЦИАЛИЗАЦИЯ ===
+    document.addEventListener('DOMContentLoaded', () => {
+      // Рендерим кликабельные слова при загрузке
+      renderClickableWords(resultsDb);
 
-        const vowels = ['а', 'е', 'ё', 'и', 'о', 'у', 'ы', 'э', 'ю', 'я'];
+      // Перерендер при изменении контента (если будет редактирование)
+      // resultsDb.addEventListener('input', () => renderClickableWords(resultsDb));
 
-        function getLastWord(text) {
-            if (!text) return '';
-            const cleanText = text.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
-            const words = cleanText.split(/\s+/);
-            return words[words.length - 1].toLowerCase();
+      // Клик вне слов — снимает выделение
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.clickable-word') && !e.target.closest('#rhyme-results')) {
+          document.querySelectorAll('.word-highlight').forEach(el => {
+            el.classList.remove('word-highlight');
+          });
         }
+      });
 
-        function getEnding(word) {
-            for (let i = word.length - 1; i >= 0; i--) {
-                if (vowels.includes(word[i])) {
-                    return word.substring(i);
-                }
-            }
-            return word;
+      // Подсказка при первом заходе
+      setTimeout(() => {
+        if (!document.querySelector('.word-highlight')) {
+          rhymeResults.classList.add('active');
+          rhymeList.innerHTML = '💡 <em>Кликните на любое слово выше, чтобы найти к нему рифму</em>';
         }
+      }, 1500);
+    });
 
-        function updateWordCount() {
-            const text = document.getElementById('editor').value;
-            const count = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
-            document.getElementById('word-count').innerText = `WORDS: ${count}`;
-        }
-
-        function getRhymes() {
-            const text = document.getElementById('editor').value;
-            const lastWord = getLastWord(text);
-            const container = document.getElementById('rhymes-container');
-            const status = document.getElementById('status-line');
-            
-            container.innerHTML = '';
-            playSound('click');
-
-            if (!lastWord) {
-                status.innerText = "ERROR: EMPTY_BUFFER";
-                status.style.color = "#ff0055";
-                playSound('error');
-                return;
-            }
-
-            status.innerText = `SCANNING_DB_FOR: [${lastWord.toUpperCase()}]...`;
-            status.style.color = "#4deeea";
-
-            let found = [];
-
-            // 1. Прямой поиск
-            if (rhymeDB[lastWord]) {
-                found = rhymeDB[lastWord];
-            } else {
-                // 2. Поиск по окончанию (алгоритмический)
-                const targetEnd = getEnding(lastWord);
-                Object.keys(rhymeDB).forEach(key => {
-                    if (getEnding(key) === targetEnd && key !== lastWord) {
-                        found.push(key);
-                        found = found.concat(rhymeDB[key]);
-                    }
-                });
-                found = [...new Set(found)].filter(w => w !== lastWord);
-            }
-
-            // 3. Если пусто - депрессивный рандом из общих слов
-            if (found.length === 0) {
-                found = ["тьма", "зима", "дыра", "нора", "пустота", "ничто", "бетон", "серость", "дождь", "холод"];
-                status.innerText = "NO_EXACT_MATCH. LOADING_DEFAULT_SADNESS...";
-                playSound('error');
-            } else {
-                playSound('success');
-            }
-
-            // Рендер
-            found.forEach((word, index) => {
-                setTimeout(() => {
-                    const div = document.createElement('div');
-                    div.className = "rhyme-item p-2 cursor-pointer text-gray-400 hover:text-white font-mono text-lg flex justify-between";
-                    
-                    // Добавляем метку источника (для атмосферы)
-                    let sourceTag = "";
-                    if (word.includes("#")) sourceTag = "<span class='tag-source'>[CENSORED]</span>";
-                    else if (rhymeDB[lastWord] && rhymeDB[lastWord].includes(word)) sourceTag = "<span class='tag-source'>[DIRECT]</span>";
-                    else sourceTag = "<span class='tag-source'>[ALGO]</span>";
-
-                    div.innerHTML = `<span>> ${word}</span> <div class="flex items-center gap-2">${sourceTag} <i class="fas fa-plus text-xs opacity-0 group-hover:opacity-100 text-[#ff0055]"></i></div>`;
-                    
-                    div.onmouseenter = () => playSound('hover');
-                    div.onclick = () => {
-                        const editor = document.getElementById('editor');
-                        if (editor.value.length > 0 && !editor.value.endsWith('\n') && !editor.value.endsWith(' ')) {
-                            editor.value += " ";
-                        }
-                        editor.value += word;
-                        editor.focus();
-                        updateWordCount();
-                        playSound('click');
-                    };
-                    container.appendChild(div);
-                }, index * 20); // Быстрая печать списка
-            });
-        }
-
-        // --- СНЕГ ---
-        function createSnow() {
-            const canvas = document.getElementById('snow');
-            const ctx = canvas.getContext('2d');
-            let width = window.innerWidth;
-            let height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
-
-            const flakes = [];
-            for(let i=0; i<120; i++) {
-                flakes.push({
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    r: Math.random() * 2 + 1,
-                    d: Math.random() * 100,
-                    speed: Math.random() * 1 + 0.5
-                });
-            }
-
-            function draw() {
-                ctx.clearRect(0, 0, width, height);
-                ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-                ctx.beginPath();
-                for(let i=0; i<flakes.length; i++) {
-                    let f = flakes[i];
-                    ctx.moveTo(f.x, f.y);
-                    ctx.arc(f.x, f.y, f.r, 0, Math.PI*2, true);
-                }
-                ctx.fill();
-                move();
-            }
-
-            let angle = 0;
-            function move() {
-                angle += 0.01;
-                for(let i=0; i<flakes.length; i++) {
-                    let f = flakes[i];
-                    f.y += Math.pow(f.d, 2) + 1;
-                    f.x += Math.sin(angle) * 2;
-                    if(f.y > height) {
-                        flakes[i] = {x: Math.random()*width, y: -10, r: f.r, d: f.d, speed: f.speed};
-                    }
-                }
-            }
-            setInterval(draw, 33);
-            
-            window.addEventListener('resize', () => {
-                width = window.innerWidth;
-                height = window.innerHeight;
-                canvas.width = width;
-                canvas.height = height;
-            });
-        }
-
-        window.onload = () => {
-            createSnow();
-            const editor = document.getElementById('editor');
-            editor.addEventListener('input', updateWordCount);
-            editor.addEventListener('keydown', (e) => {
-                if (e.ctrlKey && e.key === "Enter") {
-                    e.preventDefault();
-                    getRhymes();
-                }
-            });
-        };
-    </script>
+    // === ДОПОЛНИТЕЛЬНО: Поддержка вставки текста ===
+    // Если планируете динамическую загрузку контента, вызывайте:
+    // renderClickableWords(resultsDb);
+    // после обновления innerHTML
+  </script>
 </body>
 </html>
+
+
