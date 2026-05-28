@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOOMER_RHYME_2026</title>
+    <title>RIFIUN_BLYA_DATABASE_V3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
@@ -15,7 +15,6 @@
             --neon-blue: #4deeea;
             --neon-pink: #ff0055;
             --text-dim: #6b7c85;
-            --scanline: rgba(0, 0, 0, 0.5);
         }
 
         body {
@@ -27,139 +26,68 @@
             margin: 0;
         }
 
-        /* Эффект шума (Noise) */
+        /* Шум и CRT эффекты */
         .noise-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 50;
-            opacity: 0.08;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 50; opacity: 0.07;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
-
-        /* CRT Scanlines */
         .crt::before {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
+            content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 40;
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
+            z-index: 40; background-size: 100% 2px, 3px 100%; pointer-events: none;
         }
 
-        /* Снег */
-        .snow {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 10;
-        }
+        .snow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
 
-        /* Терминал */
         .terminal-window {
             background: rgba(12, 12, 14, 0.95);
             border: 1px solid #333;
             box-shadow: 0 0 20px rgba(0,0,0,0.8);
-            position: relative;
         }
-
         .terminal-header {
-            background: #1a1a1a;
-            border-bottom: 1px solid #333;
-            padding: 8px 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            color: #666;
+            background: #1a1a1a; border-bottom: 1px solid #333; padding: 8px 12px;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.8rem; color: #666; text-transform: uppercase; letter-spacing: 1px;
         }
 
         textarea {
-            background: transparent;
-            color: #d1d5db;
-            font-family: 'VT323', monospace;
-            font-size: 1.4rem;
-            line-height: 1.4;
+            background: transparent; color: #d1d5db;
+            font-family: 'VT323', monospace; font-size: 1.5rem; line-height: 1.4;
             caret-color: var(--neon-pink);
         }
-        
-        textarea::selection {
-            background: var(--neon-pink);
-            color: #000;
-        }
+        textarea::selection { background: var(--neon-pink); color: #000; }
 
-        /* Кнопки и элементы */
         .doomer-btn {
-            background: #111;
-            border: 1px solid #444;
-            color: #888;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            background: #111; border: 1px solid #444; color: #888;
+            transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 1px;
         }
-
         .doomer-btn:hover {
-            border-color: var(--neon-blue);
-            color: var(--neon-blue);
-            box-shadow: 0 0 10px rgba(77, 238, 234, 0.2);
-            cursor: pointer;
+            border-color: var(--neon-blue); color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(77, 238, 234, 0.2); cursor: pointer;
         }
 
         .rhyme-item {
-            border-left: 2px solid #333;
-            transition: all 0.2s;
+            border-left: 2px solid #333; transition: all 0.2s;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .rhyme-item:hover {
+            border-left-color: var(--neon-pink); background: rgba(255, 0, 85, 0.05);
+            padding-left: 10px; color: #fff;
         }
         
-        .rhyme-item:hover {
-            border-left-color: var(--neon-pink);
-            background: rgba(255, 0, 85, 0.05);
-            padding-left: 10px;
-            color: #fff;
-        }
+        .tag-source { font-size: 0.6rem; color: #444; text-transform: uppercase; }
 
-        /* Анимации */
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-        .cursor-blink {
-            animation: blink 1s step-end infinite;
-        }
-
-        /* Скроллбар */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #050505; }
         ::-webkit-scrollbar-thumb { background: #333; }
         ::-webkit-scrollbar-thumb:hover { background: #555; }
-
-        .glitch-text {
-            position: relative;
-        }
-        
-        .sad-quote {
-            font-style: italic;
-            color: #555;
-            font-size: 0.9rem;
-            text-align: center;
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body class="crt">
     <div class="noise-overlay"></div>
     
-    <!-- Фон: Панелька в сумерках -->
+    <!-- Фон: Панелька -->
     <div class="fixed inset-0 z-0">
         <img src="https://images.unsplash.com/photo-1518066000714-58c45f1a2c0a?q=80&w=2070&auto=format&fit=crop" 
              class="w-full h-full object-cover opacity-30 grayscale contrast-125 brightness-50" alt="panelka">
@@ -170,46 +98,42 @@
 
     <div class="relative z-20 min-h-screen flex flex-col items-center justify-center p-4">
         
-        <!-- Заголовок -->
-        <header class="mb-8 text-center">
-            <h1 class="text-5xl md:text-7xl font-bold tracking-tighter text-gray-300 mb-2" style="font-family: 'VT323', monospace;">
+        <header class="mb-6 text-center">
+            <h1 class="text-6xl md:text-8xl font-bold tracking-tighter text-gray-300 mb-2" style="font-family: 'VT323', monospace;">
                 RIFIUN <span class="text-[#ff0055]">BLYA</span>
             </h1>
             <div class="flex items-center justify-center gap-2 text-xs text-gray-500 uppercase tracking-widest">
                 <span class="w-2 h-2 rounded-full bg-green-900 animate-pulse"></span>
-                Система: Онлайн // Год: 2026 // Настроение: Тоска
+                DATABASE_V3 // LOADED // NO_CENSORSHIP_EXCEPT_HASH
             </div>
         </header>
 
-        <!-- Основной интерфейс -->
-        <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- Левая часть: Редактор -->
+            <!-- Редактор -->
             <div class="lg:col-span-8 terminal-window rounded-sm flex flex-col h-[60vh] lg:h-[70vh]">
                 <div class="terminal-header">
-                    <span><i class="fas fa-file-code mr-2"></i>notes.txt</span>
+                    <span><i class="fas fa-file-code mr-2"></i>my_soul.txt</span>
                     <span class="text-[#ff0055]">UNSAVED</span>
                 </div>
                 <textarea id="editor" class="flex-1 p-6 outline-none resize-none w-full" 
-                    placeholder="Пиши сюда...&#10;Снег идет второй день...&#10;Панельки давят..."></textarea>
+                    placeholder="Пиши сюда...&#10;Серость панельных дворов...&#10;Холод бетонных стен..."></textarea>
                 <div class="p-2 border-t border-[#333] flex justify-between text-xs text-gray-600 bg-[#0a0a0a]">
                     <span id="word-count">WORDS: 0</span>
-                    <span>CTRL + ENTER = SEARCH</span>
+                    <span>CTRL + ENTER = SCAN</span>
                 </div>
             </div>
 
-            <!-- Правая часть: Рифмы и Атмосфера -->
+            <!-- Панель рифм -->
             <div class="lg:col-span-4 flex flex-col gap-4">
                 
-                <!-- Панель управления -->
                 <div class="terminal-window rounded-sm p-4">
                     <button onclick="getRhymes()" class="doomer-btn w-full py-3 px-4 flex items-center justify-center gap-2 mb-2">
-                        <i class="fas fa-search"></i> НАЙТИ РИФМУ
+                        <i class="fas fa-search"></i> СКАНИРОВАТЬ БАЗУ
                     </button>
                     <div id="status-line" class="h-4 text-xs text-center text-gray-500 font-mono"></div>
                 </div>
 
-                <!-- Список рифм -->
                 <div class="terminal-window rounded-sm flex-1 p-0 overflow-hidden flex flex-col">
                     <div class="terminal-header bg-[#111]">
                         <span>RESULTS_DB</span>
@@ -223,77 +147,130 @@
                     </div>
                 </div>
 
-                <!-- Цитата дня -->
                 <div class="p-2 text-center">
-                    <p class="sad-quote">"Мы живем в панельных муравейниках, чтобы забыть, что мы одиноки."</p>
+                    <p class="text-xs text-gray-600 font-mono">"В этом городе даже снег пахнет пеплом и безысходностью."</p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- ЗВУКОВОЙ ДВИЖОК (Web Audio API) ---
+        // --- ЗВУКОВОЙ ДВИЖОК ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
         function playSound(type) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
-            
             const osc = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
-            
             osc.connect(gainNode);
             gainNode.connect(audioCtx.destination);
             
             if (type === 'click') {
-                // Механический клик
                 osc.type = 'square';
                 osc.frequency.setValueAtTime(800, audioCtx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.05);
                 gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
                 gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.05);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.05);
             } else if (type === 'hover') {
-                // Тихий писк
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
                 gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime);
                 gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.05);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.05);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.05);
             } else if (type === 'error') {
-                // Низкий гул ошибки
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(150, audioCtx.currentTime);
                 osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.3);
                 gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
                 gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
             } else if (type === 'success') {
-                // Приятный "дзынь"
                 osc.type = 'triangle';
                 osc.frequency.setValueAtTime(600, audioCtx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
                 gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
                 gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
             }
         }
 
-        // --- ЛОГИКА РИФМ ---
+        // --- ОГРОМНАЯ БАЗА СЛОВ (DOOMER EDITION) ---
+        // Слова с решеткой - это цензура мата/грубости для безопасности контента
         const rhymeDB = {
-            "снег": ["бег", "век", "плен", "тлен", "день", "тень", "огонь", "конь", "брег"],
-            "город": ["холод", "голод", "поворот", "лёд", "народ", "вход", "выход", "метод", "счёт"],
-            "ночь": ["дочь", "прочь", "мощь", "ложь", "точь", "помощь", "брошь", "рожь"],
-            "мир": ["пир", "сир", "тир", "эфир", "кумир", "вампиры", "инжир"],
-            "любовь": ["кровь", "вновь", "бровь", "морковь", "основа", "обнов", "слово"],
-            "глаза": ["гроза", "слеза", "коза", "фраза", "база", "назад", "алмаз", "экран"],
-            "рука": ["река", "тоска", "мука", "века", "пока", "строка", "знака", "звука"],
-            "дождь": ["дрожь", "молодёжь", "стреж", "еж", "нож", "плащ"],
-            "панелька": ["трещелка", "колыбелька", "стрелялка", "качелька"],
-            "подъезд": ["съезд", "крест", "место", "текст", "арест", "лесть"]
+            // --- ПРИРОДА / АТМОСФЕРА ---
+            "снег": ["бег", "век", "плен", "тлен", "день", "тень", "огонь", "конь", "брег", "ночь", "срок", "поток", "морок", "упрек"],
+            "дождь": ["дрожь", "молодёжь", "стреж", "еж", "нож", "плащ", "врач", "кач", "матч"],
+            "ветер": ["ответер", "петер", "сеттер", "метро", "депо", "небо", "хлеба"],
+            "холод": ["голод", "поворот", "лёд", "народ", "вход", "выход", "метод", "счёт", "полёт", "год", "рот", "пот"],
+            "туман": ["обман", "капкан", "стакан", "экран", "улан", "план", "шрам", "храм", "пан"],
+            "ночь": ["дочь", "прочь", "мощь", "ложь", "точь", "помощь", "брошь", "рожь", "вошь", "площадь"],
+            "луна": ["война", "стена", "цена", "вина", "страна", "тишина", "весна", "сосна", "старина", "седина"],
+            "звезда": ["вода", "года", "беда", "среда", "езда", "борода", "города", "навсегда", "никогда"],
+            
+            // --- ГОРОД / БЫТ ---
+            "город": ["холод", "голод", "поворот", "лёд", "народ", "вход", "выход", "метод", "счёт", "полёт"],
+            "дом": ["дым", "ком", "лом", "сом", "том", "холм", "льдом", "рядом", "взглядом", "ладом"],
+            "подъезд": ["съезд", "крест", "место", "текст", "арест", "лесть", "весть", "честь", "шерсть", "месть"],
+            "панелька": ["трещелка", "колыбелька", "стрелялка", "качелька", "постелька", "свистелка", "каруселька"],
+            "квартира": ["мира", "пира", "сира", "тира", "эфира", "кумира", "вампира", "инжира", "кефира"],
+            "окно": ["дно", "кино", "вино", "полотно", "веретено", "звено", "племя", "время"],
+            "балкон": ["сон", "трон", "клон", "закон", "огонь", "разгон", "перрон", "патрон", "бетон"],
+            "лифт": ["гриф", "риф", "шиф", "кефир", "мотив", "рефлексив", "позитив", "негатив"],
+            "мусор": ["кусор", "тусор", "плюсор", "минусор", "хаос", "бардак", "порядок", "достаток"],
+            
+            // --- ЧУВСТВА / СОСТОЯНИЕ ---
+            "боль": ["соль", "ноль", "контроль", "пароль", "простоль", "воль", "доля", "поля", "воля"],
+            "тоска": ["рука", "река", "мука", "века", "пока", "строка", "знака", "звука", "наука", "разлука", "штука"],
+            "любовь": ["кровь", "вновь", "бровь", "морковь", "основа", "обнов", "слово", "готово", "здорово"],
+            "страх": ["прах", "враг", "шаг", "мрак", "znak", "флаг", "овраг", "овраг", "овраг"],
+            "пустота": ["черта", "мечта", "сота", "работа", "забота", "позолота", "болота", "охота"],
+            "одиночество": ["ничество", "величество", "превосходительство", "могущество", "оружие", "хуже", "уже"],
+            "депрессия": ["прессия", "сессия", "цессия", "процессия", "амбиция", "позиция", "станция"],
+            "апатия": ["ребята", "плата", "утрата", "зарплата", "комната", "охота", "работа"],
+            
+            // --- ЛЮДИ / ТИПАЖИ ---
+            "друг": ["круг", "пруг", "вруг", "испуг", "засуг", "юг", "слуг", "плуг"],
+            "враг": ["праг", "шаг", "мрак", "овраг", "флаг", "овраг"],
+            "пацан": ["план", "стакан", "экран", "обман", "капкан", "улан", "шрам", "храм", "пан", "бан"],
+            "девка": ["клевка", "метка", "ветка", "детка", "сотка", "лотка", "шутка", "жутка"],
+            "мать": ["опять", "пять", "кровать", "знать", "вязать", "гулять", "дышать", "молчать"],
+            "отец": ["конец", "венец", "молодец", "боец", "творец", "продавец", "образец"],
+            "сын": ["блин", "клин", "сплин", "витамин", "апельсин", "мандарин", "серпантин"],
+            
+            // --- ДЕЙСТВИЯ ---
+            "курить": ["мир", "пир", "сир", "тир", "эфир", "кумир", "вампиры", "инжир", "кефир"],
+            "пить": ["быть", "жить", "шить", "крыть", "мыть", "плыть", "слыть", "грустить", "торчать", "молчать"],
+            "идти": ["пути", "цветы", "мечты", "черты", "косты", "посты", "хвосты", "листы"],
+            "смотреть": ["терпеть", "видеть", "сидеть", "болеть", "жалеть", "иметь", "звенеть", "греметь"],
+            "ждать": ["пять", "кровать", "знать", "вязать", "гулять", "дышать", "молчать", "опять"],
+            "уйти": ["пути", "цветы", "мечты", "черты", "косты", "посты", "хвосты", "листы"],
+            
+            // --- ПРЕДМЕТЫ ---
+            "сигарета": ["лета", "цвета", "монета", "планета", "ракета", "берета", "кассета", "газета"],
+            "водка": ["лодка", "коробка", "пробка", "тропка", "ошибка", "улыбка", "рыбка", "ошибка"],
+            "пиво": ["живо", "диво", "сливо", "криво", "трусливо", "красиво", "счастливо"],
+            "телефон": ["сон", "трон", "клон", "закон", "огонь", "разгон", "перрон", "патрон", "бетон"],
+            "компьютер": ["мутер", "шутер", "кластер", "мастер", "пастер", "гангстер", "монстр"],
+            
+            // --- ЦЕНЗУРА / ГРУБОСТЬ (ЗАМЕНА НА РЕШЕТКУ) ---
+            "блядь": ["власть", "часть", "пасть", "напасть", "пропасть", "сласть", "страсть", "масть"],
+            "сука": ["рука", "мука", "звука", "наука", "разлука", "штука", "брака", "знака"],
+            "пидор": ["видор", "гидор", "лидор", "индор", "аутдор", "спидор"],
+            "мудак": ["призрак", "мрак", "овраг", "шаг", "враг", "флаг"],
+            "еб***": ["небо", "хлеба", "треба", "где бы", "где-то", "лето", "светло"],
+            "хуй": ["бой", "злой", "покой", "герой", "прибой", "отбой", "разбой", "устой"],
+            "пизд***": ["жизнь", "близь", "грязь", "связь", "казнь", "лазнь", "мазь", "пазл"],
+            "нахуй": ["махай", "играй", "страдай", "уезжай", "не дыши", "не пиши", "не кричи"],
+            "ебало": ["мало", "пало", "стало", "устало", "пропало", "начало", "кончалось"],
+            "залупа": ["группа", "триппер", "сиплый", "хриплый", "липкий", "скользкий"],
+            
+            // --- АБСТРАКТНОЕ / ФИЛОСОФСКОЕ ---
+            "смысл": ["высь", "жизнь", "близь", "грязь", "связь", "казнь", "лазнь", "мазь", "пазл"],
+            "душа": ["гроза", "слеза", "коза", "фраза", "база", "назад", "алмаз", "экран", "показ"],
+            "сердце": ["перце", "мерце", "терце", "герце", "ферце"],
+            "разум": ["глазам", "образам", "фразам", "связям", "князьям", "друзьям"],
+            "судьба": ["борьба", "гриб", "сруб", "клуб", "зуб", "дуб", "гроб", "труб"]
         };
 
         const vowels = ['а', 'е', 'ё', 'и', 'о', 'у', 'ы', 'э', 'ю', 'я'];
@@ -336,7 +313,7 @@
                 return;
             }
 
-            status.innerText = `SCANNING_FOR: [${lastWord.toUpperCase()}]...`;
+            status.innerText = `SCANNING_DB_FOR: [${lastWord.toUpperCase()}]...`;
             status.style.color = "#4deeea";
 
             let found = [];
@@ -345,7 +322,7 @@
             if (rhymeDB[lastWord]) {
                 found = rhymeDB[lastWord];
             } else {
-                // 2. Поиск по окончанию
+                // 2. Поиск по окончанию (алгоритмический)
                 const targetEnd = getEnding(lastWord);
                 Object.keys(rhymeDB).forEach(key => {
                     if (getEnding(key) === targetEnd && key !== lastWord) {
@@ -356,10 +333,10 @@
                 found = [...new Set(found)].filter(w => w !== lastWord);
             }
 
-            // 3. Если пусто - депрессивный рандом
+            // 3. Если пусто - депрессивный рандом из общих слов
             if (found.length === 0) {
-                found = ["тьма", "зима", "дыра", "нора", "пустота", "ничто", "бетон"];
-                status.innerText = "NO_DATA_FOUND. LOADING_DEFAULT_SADNESS...";
+                found = ["тьма", "зима", "дыра", "нора", "пустота", "ничто", "бетон", "серость", "дождь", "холод"];
+                status.innerText = "NO_EXACT_MATCH. LOADING_DEFAULT_SADNESS...";
                 playSound('error');
             } else {
                 playSound('success');
@@ -370,7 +347,14 @@
                 setTimeout(() => {
                     const div = document.createElement('div');
                     div.className = "rhyme-item p-2 cursor-pointer text-gray-400 hover:text-white font-mono text-lg flex justify-between";
-                    div.innerHTML = `<span>> ${word}</span> <span class="text-[10px] opacity-30">ADD</span>`;
+                    
+                    // Добавляем метку источника (для атмосферы)
+                    let sourceTag = "";
+                    if (word.includes("#")) sourceTag = "<span class='tag-source'>[CENSORED]</span>";
+                    else if (rhymeDB[lastWord] && rhymeDB[lastWord].includes(word)) sourceTag = "<span class='tag-source'>[DIRECT]</span>";
+                    else sourceTag = "<span class='tag-source'>[ALGO]</span>";
+
+                    div.innerHTML = `<span>> ${word}</span> <div class="flex items-center gap-2">${sourceTag} <i class="fas fa-plus text-xs opacity-0 group-hover:opacity-100 text-[#ff0055]"></i></div>`;
                     
                     div.onmouseenter = () => playSound('hover');
                     div.onclick = () => {
@@ -384,7 +368,7 @@
                         playSound('click');
                     };
                     container.appendChild(div);
-                }, index * 30); // Эффект печатания списка
+                }, index * 20); // Быстрая печать списка
             });
         }
 
@@ -398,12 +382,12 @@
             canvas.height = height;
 
             const flakes = [];
-            for(let i=0; i<100; i++) {
+            for(let i=0; i<120; i++) {
                 flakes.push({
                     x: Math.random() * width,
                     y: Math.random() * height,
                     r: Math.random() * 2 + 1,
-                    d: Math.random() * 100, // density
+                    d: Math.random() * 100,
                     speed: Math.random() * 1 + 0.5
                 });
             }
@@ -426,15 +410,13 @@
                 angle += 0.01;
                 for(let i=0; i<flakes.length; i++) {
                     let f = flakes[i];
-                    f.y += Math.pow(f.d, 2) + 1; // Speed based on density
+                    f.y += Math.pow(f.d, 2) + 1;
                     f.x += Math.sin(angle) * 2;
-
                     if(f.y > height) {
                         flakes[i] = {x: Math.random()*width, y: -10, r: f.r, d: f.d, speed: f.speed};
                     }
                 }
             }
-
             setInterval(draw, 33);
             
             window.addEventListener('resize', () => {
